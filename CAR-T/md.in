@@ -1,0 +1,24 @@
+mdcrd="output/md"
+cellpar="par.dat"
+
+# Inital cell number
+N=1
+N0=10000
+
+# Dynamical control paramters
+dt=0.25
+T1=2400
+type=1
+ntpr=0
+ntpx=96
+
+# Parameters for the function R(t)
+R0=1.0
+rho=0.0
+tau1=320.0
+tau2=50.0
+r19=1.0
+
+# Rando number seed
+seed=3432
+
