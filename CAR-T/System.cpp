@@ -180,7 +180,6 @@ bool CSystem::SystemUpdate(double t)
             (*this)(k)._q[4] = z[k];
             if(Rand()<(*this)(k)._plost && (*this)(k)._q[1]>0.6)
             {
-//                printf("%f\n",(*this)(k)._plost);
                 (*this)(k)._q[1] = Rand(0,0.2);
                 (*this)(k)._X[1] = (*this)(k)._q[1];
             }

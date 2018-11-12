@@ -12,6 +12,8 @@ using namespace std;
 
 extern struct IMD _MD;
 extern CRandom Rand;
+extern double _ratio19;
+
 
 CStemCell::CStemCell()
 {
@@ -72,12 +74,12 @@ void CStemCell::ReadPar(char fpar[])
 		if(str[0]=='#'){ continue;}
 
         if((pst=strstr(str,"beta0="))!=NULL)
-		{
-			_par.beta0=atof(pst+6);
-		}
-        if((pst=strstr(str,"alpha34="))!=NULL)
+	{
+		_par.beta0=atof(pst+6);
+	}
+        if((pst=strstr(str,"cd34b="))!=NULL)
         {
-            _par.alpha34=atof(pst+8);
+            _par.cd34b=atof(pst+6);
         }
         if((pst=strstr(str,"alpha19="))!=NULL)
         {
@@ -131,13 +133,17 @@ void CStemCell::ReadPar(char fpar[])
         {
             _par.theta=atof(pst+6);
         }
-        if((pst=strstr(str,"gamma19="))!=NULL)
+        if((pst=strstr(str,"gamma19v="))!=NULL)
         {
-            _par.gamma19=atof(pst+8);
+            _par.gamma19=atof(pst+9);
         }
-        if((pst=strstr(str,"gamma22="))!=NULL)
+        if((pst=strstr(str,"gamma22v="))!=NULL)
         {
-            _par.gamma22=atof(pst+8);
+            _par.gamma22=atof(pst+9);
+        }
+        if((pst=strstr(str,"gamma123v="))!=NULL)
+        {
+            _par.gamma123=atof(pst+10);
         }
         if((pst=strstr(str,"CD34="))!=NULL)
         {
@@ -179,13 +185,16 @@ void CStemCell::ReadPar(char fpar[])
 void CStemCell::OutPutParameters()
 {
     printf("beta0=%f\n", _par.beta0);
-    printf("mu0=%f, mu1=%f\n",_par.mu0, _par.mu1);
+    printf("mu0=%f, mu1=%f, m2=%f\n",_par.mu0, _par.mu1, _par.mu2);
     printf("alpha19=%f\n",_par.alpha19);
     printf("kappa0=%f\n",_par.kappa0);
     printf("p0=%f\n",_par.p0);
     printf("m=%f\n",_par.m);
-    printf("gamma19=%f, gamma22=%f\n", _par.gamma19, _par.gamma22);
-    
+    printf("gamma19=%f, gamma22=%f, gamma123=%f\n", _par.gamma19, _par.gamma22,_par.gamma123);
+    printf("a34=%f, a123=%f, a22=%f\n", _par.a34, _par.a123, _par.a22);
+    printf("X0=%f, X1=%f\n", _par.X0, _par.X1);
+    printf("ratio19=%f\n", _ratio19);
+    printf("alpha34=%f\n", _par.alpha34);
 }
 void CStemCell::SetDefaultPar()
 {
@@ -200,6 +209,7 @@ void CStemCell::SetDefaultPar()
     _par.a123=0;
     _par.a22=0;
     _par.mu2=0;
+    _par.gamma123=0;
 }
 
 void CStemCell::GetRandForces(double b[][NUMRAND], double x[], int k)
@@ -228,10 +238,8 @@ DCell CStemCell::CellFateDecision(long N0, double R19, double R123, double dt)
     
     _par.alpha22 = 1.54 + 0.25 * CD19 + _par.a22 * _CARSignal;
     _par.alpha123 = 1.54 + 0.45 * CD34 + _par.a123 * _CARSignal;
-    _par.alphaLNK = 2.1 - 0.3 * _CARSignal;
-    _par.alpha34 = 1.56 + 0.16 * CD19 + _par.a34 * _CARSignal;
-    
-    //   0.16 * CD19
+    _par.alphaLNK = 2.1 - 0.3 * _CARSignal;  
+    _par.alpha34 = _par.cd34b + 0.16 * CD19 + _par.a34 * _CARSignal;
     
     DCell nextcell;
     
@@ -332,9 +340,6 @@ void CStemCell::Propensities(double a[])
 double CStemCell::fbeta(long N0, double R19, double R123)
 {
     double beta;
-    double beta0;
-    
-    beta0 = _par.beta0 *(1 - 0.2 * _CARSignal);
     
     if(_celltype == TD){
         beta = 0;
@@ -355,11 +360,11 @@ double CStemCell::fkappa()
 double CStemCell::fdeathrate(double R19, double R123)
 {
     double mu;
-    if(_mutant == 1 )    // CD19 mutant cells
+    if(_mutant == 1 )    // CD19 mutant cells or HSC
     {
         mu = _par.mu0;
     } else {
-        mu = _par.mu0 + _par.mu1* _CARSignal + _par.mu2 * CD123 * R123;
+        mu = _par.mu0 + _par.mu1* _CARSignal + _par.mu2 * (_par.gamma123 * CD123)/(1.0 + _par.gamma123 * CD123) * R123;
     }
     return(mu);
 }

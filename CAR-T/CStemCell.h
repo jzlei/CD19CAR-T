@@ -7,12 +7,13 @@ struct PARStemCell{
     double beta0, kappa0, m;
     double mu0, mu1, mu2;
     double alpha34, alpha19, alpha22, alphaLNK, alpha123;
-    double gamma19, gamma22;
+    double gamma19, gamma22, gamma123;
     double p0, plost;  // p0: the probability of CD19 mutation; plost: the probability of CD19 lost
     double theta;
     double X0, n0;
     double X1, n1;
     double a123,a34,a22;
+    double cd34b;
 };   // System parameters
 
 
