@@ -168,23 +168,23 @@ bool CSystem::SystemUpdate(double t)
         if(Rand()<p0 && k<_MaxNumCell)
         {
             k=k+1;
-            (*this)(k)._X[0] = X34[k];
-            (*this)(k)._X[1] = X19[k];
-            (*this)(k)._X[2] = X22[k];
-            (*this)(k)._X[3] = LNK[k];
-            (*this)(k)._X[4] = X123[k];
-            (*this)(k)._q[0] = p[k];
-            (*this)(k)._q[1] = q[k];
-            (*this)(k)._q[2] = r[k];
-            (*this)(k)._q[3] = w[k];
-            (*this)(k)._q[4] = z[k];
-            if(Rand()<(*this)(k)._plost && (*this)(k)._q[1]>0.6)
+            (*this)(k)._X[0] = X34[i];
+            (*this)(k)._X[1] = X19[i];
+            (*this)(k)._X[2] = X22[i];
+            (*this)(k)._X[3] = LNK[i];
+            (*this)(k)._X[4] = X123[i];
+            (*this)(k)._q[0] = p[i];
+            (*this)(k)._q[1] = q[i];
+            (*this)(k)._q[2] = r[i];
+            (*this)(k)._q[3] = w[i];
+            (*this)(k)._q[4] = z[i];
+            if(Rand()<(*this)(i)._plost && (*this)(i)._q[1]>0.6)
             {
                 (*this)(k)._q[1] = Rand(0,0.2);
-                (*this)(k)._X[1] = (*this)(k)._q[1];
+                (*this)(k)._X[1] = (*this)(i)._q[1];
             }
-            (*this)(k)._celltype = celltype[k];
-            (*this)(k)._mutant = mutanttype[k];
+            (*this)(k)._celltype = celltype[i];
+            (*this)(k)._mutant = mutanttype[i];
             if((*this)(k)._mutant==1) _N1++;
         }
         if (k==_MaxNumCell)
